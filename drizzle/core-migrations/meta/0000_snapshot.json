@@ -1,5 +1,5 @@
 {
-  "id": "5b9bfef8-afc0-4366-a577-6b32a78c960e",
+  "id": "3f1082cd-0ba7-46de-86cc-b708fe4bc5f3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -73,7 +73,7 @@
       "columns": {
         "workspace_id": {
           "name": "workspace_id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -81,7 +81,7 @@
           "name": "user_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "is_admin": {
           "name": "is_admin",
@@ -140,13 +140,20 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "name": {
           "name": "name",
           "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         }
@@ -158,9 +165,32 @@
             "name"
           ],
           "isUnique": false
+        },
+        "idx_uq_workspace_name_owner": {
+          "name": "idx_uq_workspace_name_owner",
+          "columns": [
+            "name",
+            "owner_id"
+          ],
+          "isUnique": true
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "workspace_owner_id_user_id_fk": {
+          "name": "workspace_owner_id_user_id_fk",
+          "tableFrom": "workspace",
+          "tableTo": "user",
+          "schemaTo": "core",
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }

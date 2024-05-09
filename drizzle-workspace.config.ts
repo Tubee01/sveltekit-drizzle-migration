@@ -3,7 +3,7 @@ import type { Config } from 'drizzle-kit';
 
 
 export default {
-  schema: './src/database/schemas/workspace.schema.ts',
+  schema: './src/database/schema/workspace.schema.ts',
   out: './drizzle/workspace-migrations',
   driver: 'pg',
   dbCredentials: {

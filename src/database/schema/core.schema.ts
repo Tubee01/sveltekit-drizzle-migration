@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   boolean,
   index,
@@ -5,6 +6,8 @@ import {
   pgSchema,
   serial,
   timestamp,
+  uniqueIndex,
+  uuid,
   varchar,
 } from "drizzle-orm/pg-core";
 export const coreSchema = pgSchema("core");
@@ -29,12 +32,17 @@ export const user = coreSchema.table(
 export const workspace = coreSchema.table(
   "workspace",
   {
-    id: serial("id").primaryKey(),
+    id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
     name: varchar("name", { length: 100 }).notNull(),
+    ownerId: integer("owner_id").references(() => user.id).notNull(),
   },
   (workspace) => {
     return {
       nameIndex: index("idx_workspace_name").on(workspace.name),
+      uniqueNameOwnerIndex: uniqueIndex("idx_uq_workspace_name_owner").on(
+        workspace.name,
+        workspace.ownerId
+      ),
     };
   }
 );
@@ -42,8 +50,8 @@ export const workspace = coreSchema.table(
 export const userWorkspace = coreSchema.table(
   "user_workspace",
   {
-    workspaceId: integer("workspace_id").references(() => workspace.id),
-    userId: integer("user_id").references(() => user.id),
+    workspaceId: uuid("workspace_id").references(() => workspace.id),
+    userId: integer("user_id").references(() => user.id).notNull(),
     isAdmin: boolean("is_admin").default(false),
   },
   (userWorkspace) => {

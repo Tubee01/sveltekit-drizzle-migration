@@ -1,5 +1,6 @@
-import { coreSchema } from "../schemas";
-import { Migration, MigrationConfig } from "./migration.abstract";
+import { coreSchema } from "../schema";
+import { Migration } from "./migration.abstract";
+import type { MigrationConfig } from "./types/migration-config.type";
 
 export class CoreMigration extends Migration {
   constructor(config: MigrationConfig) {

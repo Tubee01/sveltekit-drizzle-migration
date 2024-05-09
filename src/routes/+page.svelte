@@ -1,5 +1,5 @@
 <form method="post" >
-    <label for="workspace">Workspace name</label>
-    <input type="text" id="workspace" name="workspace" required>
-    <button type="submit">Create workspace</button>
+    <label for="workspace">Update workspaces:</label>
+    <input type="checkbox" name="updateWorkspaces" value="1" checked>
+    <button type="submit">init/push core schema</button>
 </form>
